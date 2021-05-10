@@ -3,6 +3,9 @@
 const {join} = require("path");
 const fs = require("fs");
 
+// 表名
+const {TABLE = 'china_region'} = process.env;
+
 // 地区数据所在目录
 const data_dir = join(process.cwd(), "json")
 
@@ -17,13 +20,13 @@ const sqlFile = "regions.sql";
 const mapFn = {
     // 处理省份数据
     province: ({id, name}) =>
-        `insert into china_region(${columns}) values (null,'${name}',${id},0);`,
+        `insert into ${TABLE}(${columns}) values (null,'${name}',${id},0);`,
     // 处理省份以外的数据
     city: (cities) =>
         Object.entries(cities).flatMap(([parentNo, areas]) =>
             areas.map(
                 ({id, name}) =>
-                    `insert into china_region(${columns}) values (null,'${name}',${id},${parentNo});`
+                    `insert into ${TABLE}(${columns}) values (null,'${name}',${id},${parentNo});`
             )
         ),
 };
